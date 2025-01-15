@@ -3,13 +3,15 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Disposable, Event, ProviderResult, Uri } from 'vscode';
+import { Command, Disposable, Event, ProviderResult } from 'vscode';
 export { ProviderResult } from 'vscode';
 
 export interface API {
-	pickRemoteSource(options: PickRemoteSourceOptions): Promise<string | PickRemoteSourceResult | undefined>;
-	getRemoteSourceActions(url: string): Promise<RemoteSourceAction[]>;
 	registerRemoteSourceProvider(provider: RemoteSourceProvider): Disposable;
+	getRemoteSourceActions(url: string): Promise<RemoteSourceAction[]>;
+	getRemoteSourceControlHistoryItemCommands(url: string): Promise<Command[] | undefined>;
+	pickRemoteSource(options: PickRemoteSourceOptions): Promise<string | PickRemoteSourceResult | undefined>;
+	provideRemoteSourceLinks(url: string, content: string): Promise<string | undefined>;
 }
 
 export interface GitBaseExtension {
@@ -81,6 +83,7 @@ export interface RemoteSourceProvider {
 
 	getBranches?(url: string): ProviderResult<string[]>;
 	getRemoteSourceActions?(url: string): ProviderResult<RemoteSourceAction[]>;
+	getRemoteSourceControlHistoryItemCommands?(url: string): ProviderResult<Command[]>;
 	getRecentRemoteSources?(query?: string): ProviderResult<RecentRemoteSource[]>;
 	getRemoteSources(query?: string): ProviderResult<RemoteSource[]>;
 }
